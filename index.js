@@ -28,6 +28,8 @@ app.use('/api/restaurant', require('./routes/restaurant'));
 app.use('/api/menu', require('./routes/menu'));
 app.use('/api/food', require('./routes/food'));
 app.use('/api/size', require('./routes/size'));
+app.use('/api/addon', require('./routes/addon'));
+app.use('/api/order', require('./routes/order'));
 
 const port = 5000 || process.env.PORT;
 
