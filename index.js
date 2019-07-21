@@ -25,6 +25,8 @@ app.use(bodyParser.json());
 app.use('/api/user', require('./routes/user'));
 app.use('/api/favorite', require('./routes/favorite'));
 app.use('/api/restaurant', require('./routes/restaurant'));
+app.use('/api/menu', require('./routes/menu'))
+app.use('/api/food', require('./routes/food'))
 
 const port = 5000 || process.env.PORT;
 
