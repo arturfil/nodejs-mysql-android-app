@@ -4,21 +4,19 @@ const express = require('express');
 const router = express.Router();
 
 //==============================================
-// MENU TABLE
+// SIZE TABLE
 // GET / POST / DELETE
 //==============================================
-router.get('/menuById', (req, res, next) => {
+router.get('/', (req, res, next) => {
   if (req.query.key == secret) {
     req.getConnection((error, conn) => {
-      const restaurant_id = req.query.restaurantId;
-      if (restaurant_id != null) {
-        conn.query(`
-            SELECT id,name,description,image
-            FROM Menu 
-            WHERE id in 
-            (SELECT menuId FROM Restaurant_Menu WHERE restaurantId=?)
+      const food_id = req.query.foodId;
+      if (food_id != null) {
+        conn.query(
+          `SELECT id,description,extraPrice
+          FROM Size WHERE id in(SELECT sizeId FROM Food_Size WHERE foodId=?)
             `,
-          [restaurant_id],
+          [food_id],
           (err, rows, fields) => {
             if (err) {
               res.status(500);
@@ -32,14 +30,12 @@ router.get('/menuById', (req, res, next) => {
             }
           })
       } else {
-        res.send(JSON.stringify({ success: false, message: "Missing restaurantId in query" }))
+        res.send(JSON.stringify({ success: false, message: "Missing foodId in query" }))
       }
     })
   } else {
     res.send(JSON.stringify({ success: false, message: "Wrong secret Key" }))
   }
 })
-
-
 
 module.exports = router;

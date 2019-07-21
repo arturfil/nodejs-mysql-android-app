@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 //==============================================
-// RESTAURANT TABLE
+// FOOD TABLE
 // GET / POST / DELETE
 //==============================================
 router.get('/', (req, res, next) => {
@@ -69,6 +69,40 @@ router.get('/foodById', (req, res, next) => {
           })
       } else {
         res.send(JSON.stringify({ success: false, message: "Missing foodId in query" }))
+      }
+    })
+  } else {
+    res.send(JSON.stringify({ success: false, message: "Wrong secret Key" }))
+  }
+})
+
+router.get('/searchfood', (req,res) => {
+  if (req.query.key == secret) {
+    req.getConnection((error, conn) => {
+      const search_query = '%' + req.query.foodName+'%';
+      if (search_query != null) {
+        conn.query(
+          `SELECT id,name,description,image,price,
+            CASE WHEN isSize=1 THEN \'TRUE\' ELSE \'FALSE\' END as isSize,`
+          + `CASE WHEN isAddon=1 THEN \'TRUE\' ELSE \'FALSE\' END as isAddon,
+            discount FROM Food
+            WHERE name LIKE ?
+            `,
+          [search_query],
+          (err, rows, fields) => {
+            if (err) {
+              res.status(500);
+              res.send(JSON.stringify({ success: false, message: err.message }))
+            } else {
+              if (rows.length > 0) {
+                res.send(JSON.stringify({ success: true, result: rows }));
+              } else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }))
+              }
+            }
+          })
+      } else {
+        res.send(JSON.stringify({ success: false, message: "Missing foodName in query" }))
       }
     })
   } else {
