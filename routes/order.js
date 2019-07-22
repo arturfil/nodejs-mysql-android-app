@@ -135,7 +135,7 @@ router.post('/updateOrder', (req, res, next) => {
     }
 
     if(order_detail != null && order_id != null) {
-      let data_insert = []
+      const data_insert = []
       for(i = 0; i < order_detail.length; i++) {
         data_insert[i] = [
           parseInt(order_id),
